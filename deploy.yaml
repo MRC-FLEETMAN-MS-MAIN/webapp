@@ -77,12 +77,18 @@
        link: /usr/bin/java
     become: true
 
+  - name: Send the docker file across to the new instance
+    copy: 
+       src: dockerfile
+       dest: /home/ec2-user/webapp/target/
+       mode: 0700
+       
+       
   - name: Send the deployment across to the new instance
     copy: 
        src: target/msbuildtry-0.0.1-SNAPSHOT.war
        dest: /home/ec2-user/webapp/target/
        mode: 0700
-       
    
   - name: Remove exisiting docker files
     yum:
@@ -125,7 +131,7 @@
   - name: Build the Docker image
     command: docker build --tag webapp:1.0 .
     args:
-            chdir: webapp/
+            chdir: webapp/target/
 
     become: yes
 

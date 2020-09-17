@@ -162,6 +162,9 @@
           instance-state-name: running
        region: "{{ region }}"
     register: new_server
+    
+   
+  -  debug: msg="{{ new_server.instances[0].tags.Name}}"
 
   - name: Get the id of the old, soon to be dead, green server
     ec2_instance_info:
@@ -174,7 +177,7 @@
 
   - name: Deallocate the EIP
     ec2_eip:
-       device_id: "{{ old_green.instance_id[0] }}"
+       instance_id: "{{ old_green.instance_id[0] }}"
        ip: "{{ live_ip_address }}"
        state: absent
        region: "{{ region }}"
@@ -182,7 +185,7 @@
 
   - name: Allocate the EIP to the new instance
     ec2_eip:
-      device_id: "{{ new_server.instance_id[0] }}"
+      instance_id: "{{ new_server.instance_id[0] }}"
       ip: "{{ live_ip_address }}"
       region: "{{ region }}"
 

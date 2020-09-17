@@ -164,7 +164,7 @@
     register: new_server
     
    
-  -  debug: msg="{{ new_server.instances[0].tags.Name}}"
+  -  debug: msg="{{ new_server.instances[0].instance_id}}"
 
   - name: Get the id of the old, soon to be dead, green server
     ec2_instance_info:
@@ -177,15 +177,15 @@
 
   - name: Deallocate the EIP
     ec2_eip:
-       instance_id: "{{ old_green.instance_id[0] }}"
+       instance_id: "{{ old_green.instances[0].instance_id }}"
        ip: "{{ live_ip_address }}"
        state: absent
        region: "{{ region }}"
-    when: old_green.instance_id[0] is defined
+    when: old_green.instances[0].instance_id is defined
 
   - name: Allocate the EIP to the new instance
     ec2_eip:
-      instance_id: "{{ new_server.instance_id[0] }}"
+      instance_id: "{{ new_server.instances[0].instance_id }}"
       ip: "{{ live_ip_address }}"
       region: "{{ region }}"
 
@@ -201,7 +201,7 @@
   - name: All done, set new server to Green status
     ec2_tag:
        region: "{{ region }}"
-       resource: "{{ new_server.instance_id[0]}}"
+       resource: "{{ new_server.instances[0].instance_id}}"
        tags:
           Deploy: Green
        state: present
@@ -209,7 +209,7 @@
   - name: Remove Blue Tag
     ec2_tag:
        region: "{{ region }}"
-       resource: "{{ new_server.instance_id[0] }}"
+       resource: "{{ new_server.instances[0].instance_id }}"
        tags:
           Deploy: Blue
        state: absent

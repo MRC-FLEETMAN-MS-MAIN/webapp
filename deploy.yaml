@@ -1,7 +1,7 @@
 #  Provisions a new Webserver
 
 - hosts: localhost
-  gather_facts: no
+  gather_facts: yes
   vars: 
      region: us-east-1
      keypair_name: microservice

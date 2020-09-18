@@ -145,7 +145,7 @@
 
 
   - name: Run the Docker container
-    command: docker run --restart always --publish 8080:8080 --detach --name bb webapp:1.0
+    command: docker run -d -e "eureka.instance.hostname=34.195.41.137" --restart always --publish 8080:8080 --name bb webapp:1.0
     become: yes
 
 
